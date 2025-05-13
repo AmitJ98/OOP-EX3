@@ -13,9 +13,9 @@ import java.util.Map;
 public class AsciiArtAlgorithm {
 
 	private final Image image;
-	private final int resolution;
 	private final SubImgCharMatcher charMatcher;
 	private final Map<Color[][], Double> brightnessCache;
+	private int resolution;
 
 	public AsciiArtAlgorithm(Image image, int resolution, char[] charSet) {
 		this.image = image;
@@ -24,6 +24,30 @@ public class AsciiArtAlgorithm {
 		this.brightnessCache = new HashMap<>();
 	}
 
+
+	public void addChar(char c){
+		this.charMatcher.addChar(c);
+	}
+
+	public void removeChar(char c){
+		this.charMatcher.removeChar(c);
+	}
+
+	public void setResolution(int resolution){
+		this.resolution = resolution;
+	}
+
+	public int getResolution(){
+		return this.resolution;
+	}
+
+	public int getImageWidth(){
+		return this.image.getWidth();
+	}
+
+	public int getImageHeight(){
+		return this.image.getHeight();
+	}
 
 	/**
 	 * Runs the ASCII art algorithm and returns a 2D character array
@@ -80,4 +104,5 @@ public class AsciiArtAlgorithm {
 			System.out.println("Error running ASCII art: " + e.getMessage());
 		}
 	}
+
 }

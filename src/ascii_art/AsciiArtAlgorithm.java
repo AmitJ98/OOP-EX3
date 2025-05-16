@@ -5,7 +5,6 @@ import image.PaddedImage;
 import image_char_matching.SubImgCharMatcher;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,14 @@ public class AsciiArtAlgorithm {
 		return this.image.getHeight();
 	}
 
+	public char[] getCharSetByList(){
+		return this.charMatcher.getCharSetByList();
+	}
+
+	public void setRoundType(SubImgCharMatcher.RoundingMode roundType){
+		charMatcher.setRoundingMode(roundType);
+	}
+
 	/**
 	 * Runs the ASCII art algorithm and returns a 2D character array
 	 * representing the image in ASCII.
@@ -73,36 +80,36 @@ public class AsciiArtAlgorithm {
 		return result;
 	}
 
-	public static void main(String[] args) {
-		try {
-			// Load the image file
-			Image boardImage = new Image("examples/board.jpeg");
-
-			// Define the character set
-			char[] charset = { 'm', 'o' };
-
-			// Set resolution (2 characters per row)
-			int resolution = 2;
-
-			// Create and run the ASCII art algorithm
-			AsciiArtAlgorithm algorithm = new AsciiArtAlgorithm(boardImage, resolution, charset);
-			char[][] result = algorithm.run();
-
-			// Print the result as matrix format
-			System.out.println("[");
-			for (int i = 0; i < result.length; i++) {
-				System.out.print("  [");
-				for (int j = 0; j < result[i].length; j++) {
-					System.out.print(result[i][j]);
-					if (j < result[i].length - 1) System.out.print(", ");
-				}
-				System.out.print("]");
-				if (i < result.length - 1) System.out.println(",");
-			}
-			System.out.println("\n]");
-		} catch (Exception e) {
-			System.out.println("Error running ASCII art: " + e.getMessage());
-		}
-	}
+	// public static void main(String[] args) {
+	// 	try {
+	// 		// Load the image file
+	// 		Image boardImage = new Image("examples/board.jpeg");
+	//
+	// 		// Define the character set
+	// 		char[] charset = { 'm', 'o' };
+	//
+	// 		// Set resolution (2 characters per row)
+	// 		int resolution = 2;
+	//
+	// 		// Create and run the ASCII art algorithm
+	// 		AsciiArtAlgorithm algorithm = new AsciiArtAlgorithm(boardImage, resolution, charset);
+	// 		char[][] result = algorithm.run();
+	//
+	// 		// Print the result as matrix format
+	// 		System.out.println("[");
+	// 		for (int i = 0; i < result.length; i++) {
+	// 			System.out.print("  [");
+	// 			for (int j = 0; j < result[i].length; j++) {
+	// 				System.out.print(result[i][j]);
+	// 				if (j < result[i].length - 1) System.out.print(", ");
+	// 			}
+	// 			System.out.print("]");
+	// 			if (i < result.length - 1) System.out.println(",");
+	// 		}
+	// 		System.out.println("\n]");
+	// 	} catch (Exception e) {
+	// 		System.out.println("Error running ASCII art: " + e.getMessage());
+	// 	}
+	// }
 
 }

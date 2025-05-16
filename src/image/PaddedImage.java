@@ -14,7 +14,6 @@ public class PaddedImage {
 
 	public PaddedImage(String filename) throws IOException {
 		Image originalImage = new Image(filename);
-		// todo catch the exception
 		int originalWidth = originalImage.getWidth(), originalHeight = originalImage.getHeight();
 
 		this.height = (int) Math.pow(2, Math.ceil(Math.log(originalHeight) / Math.log(2)));
@@ -42,13 +41,14 @@ public class PaddedImage {
 						|| col < widthMargin || col >= (this.width - widthMargin)) {
 					readyImage[row][col] = WHITE;
 				} else {
-					readyImage[row][col] = originalImage.getPixel(col - widthMargin, row - heightMargin);
+					readyImage[row][col] = originalImage.getPixel(row - heightMargin, col - widthMargin);
 				}
 			}
 		}
 
 		return readyImage;
 	}
+
 
 	public Color[][] getPaddedImage() {
 		return this.paddedImage;

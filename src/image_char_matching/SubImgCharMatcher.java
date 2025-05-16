@@ -1,4 +1,5 @@
 package image_char_matching;
+
 import utils.Tuple;
 
 import java.util.*;
@@ -11,15 +12,23 @@ public class SubImgCharMatcher {
 	private Map<Character, Tuple<Double, Double>> brightnessMap;
 	private Set<Character> charSet;
 
+	public enum RoundingMode {
+		UP,
+		DOWN,
+		ABS
+	}
+	private RoundingMode roundingMode;
+
 	public SubImgCharMatcher(char[] charset){
+		this.roundingMode = RoundingMode.ABS;
 		this.charSet = new HashSet<>();
 		this.brightnessMap = new HashMap<>();
 
 		for (char ch : charset){
 			this.charSet.add(ch);
-
 			this.brightnessMap.put(ch, new Tuple<>(calculateCharBrightness(ch), 0.0));
 		}
+
 		normalizedBrightnessMap();
 	}
 
@@ -28,7 +37,22 @@ public class SubImgCharMatcher {
 		double minDiff = Double.MAX_VALUE;
 
 		for (char c : this.charSet) {
-			double diff = Math.abs(brightness - brightnessMap.get(c).first);
+			double charBrightness = brightnessMap.get(c).first;
+			double diff;
+
+			switch (roundingMode) {
+				case UP:
+					diff = (charBrightness >= brightness) ? charBrightness - brightness : Double.MAX_VALUE;
+					break;
+				case DOWN:
+					diff = (charBrightness <= brightness) ? brightness - charBrightness : Double.MAX_VALUE;
+					break;
+				case ABS:
+				default:
+					diff = Math.abs(brightness - charBrightness);
+					break;
+			}
+
 			if (diff < minDiff || (diff == minDiff && c < bestChar)) {
 				minDiff = diff;
 				bestChar = c;
@@ -51,9 +75,22 @@ public class SubImgCharMatcher {
 		normalizedBrightnessMap();
 	}
 
+	public char[] getCharSetByList(){
+		char [] charList = new char[this.charSet.size()];
+		int index = 0;
+		for (char ch : this.charSet){
+			charList[index] = ch;
+			index++;
+		}
+		return charList;
+	}
+
+	public void setRoundingMode(RoundingMode mode) {
+		this.roundingMode = mode;
+	}
+
 	private Double findMinBrightness() {
 		double minValue = Double.MAX_VALUE;
-
 		for (Map.Entry<Character, Tuple<Double,Double>> entry : this.brightnessMap.entrySet()) {
 			if (entry.getValue().first < minValue) {
 				minValue = entry.getValue().first;
@@ -72,7 +109,6 @@ public class SubImgCharMatcher {
 		return maxValue;
 	}
 
-
 	private double calculateCharBrightness(char c){
 		boolean[][] charArray = convertToBoolArray(c);
 		int truePixel = 0;
@@ -83,10 +119,8 @@ public class SubImgCharMatcher {
 				}
 			}
 		}
-		double normalPixel = (double) truePixel / CHAR_ARRAY_SIZE;
-		return normalPixel;
+		return (double) truePixel / CHAR_ARRAY_SIZE;
 	}
-
 
 	private void normalizedBrightnessMap() {
 		double minVal = findMinBrightness();
@@ -97,5 +131,4 @@ public class SubImgCharMatcher {
 			brightness.second = (brightness.first - minVal) / (maxVal - minVal);
 		}
 	}
-
 }
